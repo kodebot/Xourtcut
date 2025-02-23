@@ -3,8 +3,8 @@ redColour    = 0xF25C54
 greenColour  = 0x06D6A0
 blueColour   = 0x1FA2F3
 yellowColour = 0xFFD166
-cyanColour   = 0x61a88b
-orangeColour = 0xffb86c
+cyanColour   = 0x8BE9FD
+orangeColour = 0xFF9F58
 purpleColour = 0xbd93f9
 pinkColour   = 0xff79c6
 blackColour  = 0x000000
@@ -40,8 +40,13 @@ end
 
 -- shortcut A
 function clickArrow()
+  local currentToolInfo = app.getToolInfo("active")
   cleanShape()
-  app.uiAction({["action"] = "ACTION_TOOL_DRAW_ARROW"})
+  if currentToolInfo and currentToolInfo.drawingType == "arrow" then
+    app.uiAction({["action"] = "ACTION_TOOL_DRAW_DOUBLE_ARROW"})
+  else
+    app.uiAction({["action"] = "ACTION_TOOL_DRAW_ARROW"})
+  end
 end
 
 -- shortcut C

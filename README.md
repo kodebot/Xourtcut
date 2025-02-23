@@ -24,7 +24,7 @@ Restart Xournal++ and you should see the plugin in the plugins menu
 ## Keybindings
 
 ```text
-a - Arrow tool
+a - Arrow tool (press again to toggle between arrow and double arrow)
 c - Circle tool
 d - Delete tool (must have an object selected)
 e - Eraser tool
