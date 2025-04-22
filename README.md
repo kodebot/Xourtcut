@@ -39,10 +39,10 @@ f - Fill tool (must have selected a shape tool and fill will be cleared on tool 
 2 - Red colour
 3 - Green colour
 4 - Blue colour
-5 - Yellow colour
-6 - Cyan colour
-7 - Orange colour
-8 - Purple colour
-9 - Pink colour
+5 - Purple colour
+6 - Yellow colour
+7 - Pink colour
+8 - Cyan colour
+9 - Orange colour
 0 - Black colour
 ```
