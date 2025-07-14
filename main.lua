@@ -33,6 +33,13 @@ function initUi()
   ref = app.registerUi({["menu"] = "Colour cyan", ["callback"] = "clickCyanColour", ["accelerator"] = "8"});
   ref = app.registerUi({["menu"] = "Colour orange", ["callback"] = "clickOrangeColour", ["accelerator"] = "9"});
   ref = app.registerUi({["menu"] = "Colour black", ["callback"] = "clickBlackColour", ["accelerator"] = "0"});
+  -- layer actions
+  ref = app.registerUi({["menu"] = "Show Next Layer", ["callback"] = "showNextLayer", ["accelerator"] = "l"});
+  ref = app.registerUi({["menu"] = "Show Previous Layer", ["callback"] = "showPreviousLayer", ["accelerator"] = "h"});
+  ref = app.registerUi({["menu"] = "Hide All Layers but 1", ["callback"] = "hideAllLayersBut1", ["accelerator"] = "<Shift>h"});
+  ref = app.registerUi({["menu"] = "Show Top Layer", ["callback"] = "showTopLayer", ["accelerator"] = "<Shift>l"});
+  ref = app.registerUi({["menu"] = "Add New Top Layer", ["callback"] = "addNewTopLayer", ["accelerator"] = "<Ctrl>l"});
+  ref = app.registerUi({["menu"] = "Delete Top Layer", ["callback"] = "deleteTopLayer", ["accelerator"] = "<Ctrl>h"});
   print("Xourtcut plugin registered\n");
 end
 
@@ -156,6 +163,87 @@ function changeToolColour(colour)
   -- change text tool colour too, because (with the default template) the TEX tool also uses that colour
   app.changeToolColor({["color"] = colour, ["tool"] = "TEXT"})
 end
+
+function hideAllLayersBut1()
+  local docStructure = app.getDocumentStructure()
+  local page = docStructure["currentPage"]
+  local numPages = #docStructure["pages"]
+
+  for i=1, numPages do
+    app.setCurrentPage(i)
+    app.setCurrentLayer(1, true)  -- makes background layer and layer 1 visible and all other layers invisible
+  end
+  
+  app.setCurrentPage(page)
+end
+
+function showTopLayer()
+  local docStructure = app.getDocumentStructure()
+  local page = docStructure["currentPage"]
+  local numPages = #docStructure["pages"]
+
+  for i=1, numPages do
+    app.setCurrentPage(i)
+    app.layerAction("ACTION_GOTO_TOP_LAYER")
+  end
+  
+  app.setCurrentPage(page)
+end
+
+function addNewTopLayer()
+  local docStructure = app.getDocumentStructure()
+  local numPages = #docStructure["pages"]
+  local page = docStructure["currentPage"]
+  
+  for i=1, numPages do
+    app.setCurrentPage(i)
+    app.layerAction("ACTION_GOTO_TOP_LAYER")
+    app.layerAction("ACTION_NEW_LAYER")  
+  end
+  
+  app.setCurrentPage(page)
+end
+
+function deleteTopLayer()
+  local docStructure = app.getDocumentStructure()
+  local numPages = #docStructure["pages"]
+  local page = docStructure["currentPage"]
+  
+  for i=1, numPages do
+    app.setCurrentPage(i)
+    app.layerAction("ACTION_GOTO_TOP_LAYER")
+    app.layerAction("ACTION_DELETE_LAYER")  
+  end
+  
+  app.setCurrentPage(page)
+end
+
+function showNextLayer()
+  local docStructure = app.getDocumentStructure()
+  local page = docStructure["currentPage"]
+  local numPages = #docStructure["pages"]
+
+  for i=1, numPages do
+    app.setCurrentPage(i)
+    app.layerAction("ACTION_GOTO_NEXT_LAYER")
+  end
+  
+  app.setCurrentPage(page)
+end
+
+function showPreviousLayer()
+  local docStructure = app.getDocumentStructure()
+  local page = docStructure["currentPage"]
+  local numPages = #docStructure["pages"]
+
+  for i=1, numPages do
+    app.setCurrentPage(i)
+    app.layerAction("ACTION_GOTO_PREVIOUS_LAYER")
+  end
+  
+  app.setCurrentPage(page)
+end
+
 
 -- helper functions
 function cleanShape()

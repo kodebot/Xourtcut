@@ -45,4 +45,13 @@ f - Fill tool (must have selected a shape tool and fill will be cleared on tool 
 8 - Cyan colour
 9 - Orange colour
 0 - Black colour
+
+l - Show Next Layer
+h - Show Previous Layer
+<Shift>h - Hide All Layers but 1
+<Shift>l - Show Top Layer
+<Ctrl>l - Add New Top Layer
+<Ctrl>h - Delete Top Layer
+
 ```
+
