@@ -33,7 +33,8 @@ s - Select Region tool
 n - Line tool
 w - Pen tool
 t - Text tool
-f - Fill tool (must have selected a shape tool and fill will be cleared on tool change)
+f - Toggle Fill tool (must have selected a shape tool and fill will be cleared on tool change)
+y - Toggle Line Style (switches between plain, dashed, and dotted lines)
 
 1 - White colour
 2 - Red colour

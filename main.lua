@@ -22,7 +22,8 @@ function initUi()
   ref = app.registerUi({["menu"] = "Line", ["callback"] = "clickLine", ["accelerator"] = "n"});
   ref = app.registerUi({["menu"] = "Pen", ["callback"] = "clickPen", ["accelerator"] = "w"});
   ref = app.registerUi({["menu"] = "Text", ["callback"] = "clickText", ["accelerator"] = "t"});
-  ref = app.registerUi({["menu"] = "Fill", ["callback"] = "clickFill", ["accelerator"] = "f"});
+  ref = app.registerUi({["menu"] = "Toggle Fill", ["callback"] = "toggleFill", ["accelerator"] = "f"});
+  ref = app.registerUi({["menu"] = "Toggle Line Style", ["callback"] = "toggleLineStyle", ["accelerator"] = "y"});
   ref = app.registerUi({["menu"] = "Colour white", ["callback"] = "clickWhiteColour", ["accelerator"] = "1"});
   ref = app.registerUi({["menu"] = "Colour red", ["callback"] = "clickRedColour", ["accelerator"] = "2"});
   ref = app.registerUi({["menu"] = "Colour green", ["callback"] = "clickGreenColour", ["accelerator"] = "3"});
@@ -60,6 +61,7 @@ end
 function clickCircle()
   cleanShape()
   app.uiAction({["action"] = "ACTION_TOOL_DRAW_ELLIPSE"})
+  app.uiAction({["action"] = "ACTION_TOOL_FILL", ["selection"] = true})
 end
 
 -- shortcut D
@@ -82,6 +84,7 @@ end
 function clickRectangle()
   cleanShape()
   app.uiAction({["action"] = "ACTION_TOOL_DRAW_RECT"})
+  app.uiAction({["action"] = "ACTION_TOOL_FILL", ["selection"] = true})
 end
 
 -- shortcut S
@@ -102,8 +105,14 @@ function clickText()
   app.uiAction({["action"] = "ACTION_TOOL_TEXT"})
 end
 
-function clickFill()
-  app.uiAction({["action"] = "ACTION_TOOL_FILL", ["selection"] = true})
+function toggleFill()
+  local currentToolInfo = app.getToolInfo("active")
+  print_table(currentToolInfo)
+  if currentToolInfo and currentToolInfo.fillOpacity > -1 then
+    app.uiAction({["action"] = "ACTION_TOOL_FILL", ["selection"] = false, ["enabled"] = false})
+  else
+    app.uiAction({["action"] = "ACTION_TOOL_FILL", ["selection"] = true})
+  end
 end
 
 -- shortcut 1
@@ -244,6 +253,19 @@ function showPreviousLayer()
   app.setCurrentPage(page)
 end
 
+function toggleLineStyle()
+  local currentToolInfo = app.getToolInfo("active")
+  -- start the app from terminal to see the print output
+  print("clickDashed called, currentToolInfo: " .. tostring(currentToolInfo.lineStyle) .. "\n")
+  if currentToolInfo and currentToolInfo.lineStyle == "plain" then
+    app.uiAction({["action"] = "ACTION_TOOL_LINE_STYLE_DASH"})
+  elseif currentToolInfo and currentToolInfo.lineStyle == "dash" then
+    app.uiAction({["action"] = "ACTION_TOOL_LINE_STYLE_DOT"})
+  else
+    app.uiAction({["action"] = "ACTION_TOOL_LINE_STYLE_PLAIN"})
+  end
+end
+
 
 -- helper functions
 function cleanShape()
@@ -254,5 +276,19 @@ function cleanShape()
 
   app.uiAction({["action"] = "ACTION_TOOL_LINE_STYLE_PLAIN"})
   app.uiAction({["action"] = "ACTION_TOOL_PEN"})
+end
+
+function print_table(t, indent)
+  indent = indent or ""
+  for k, v in pairs(t) do
+    local key = tostring(k)
+    if type(v) == "table" then
+      print(indent .. key .. " = {")
+      print_table(v, indent .. "  ")
+      print(indent .. "}")
+    else
+      print(indent .. key .. " = " .. tostring(v))
+    end
+  end
 end
 
