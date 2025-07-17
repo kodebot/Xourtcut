@@ -23,7 +23,7 @@ function initUi()
   ref = app.registerUi({["menu"] = "Pen", ["callback"] = "clickPen", ["accelerator"] = "w"});
   ref = app.registerUi({["menu"] = "Text", ["callback"] = "clickText", ["accelerator"] = "t"});
   ref = app.registerUi({["menu"] = "Toggle Fill", ["callback"] = "toggleFill", ["accelerator"] = "f"});
-  ref = app.registerUi({["menu"] = "Toggle Line Style", ["callback"] = "toggleLineStyle", ["accelerator"] = "y"});
+  ref = app.registerUi({["menu"] = "Toggle Line Style", ["callback"] = "toggleLineStyle", ["accelerator"] = "z"});
   ref = app.registerUi({["menu"] = "Colour white", ["callback"] = "clickWhiteColour", ["accelerator"] = "1"});
   ref = app.registerUi({["menu"] = "Colour red", ["callback"] = "clickRedColour", ["accelerator"] = "2"});
   ref = app.registerUi({["menu"] = "Colour green", ["callback"] = "clickGreenColour", ["accelerator"] = "3"});
