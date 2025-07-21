@@ -35,12 +35,12 @@ function initUi()
   ref = app.registerUi({["menu"] = "Colour orange", ["callback"] = "clickOrangeColour", ["accelerator"] = "9"});
   ref = app.registerUi({["menu"] = "Colour black", ["callback"] = "clickBlackColour", ["accelerator"] = "0"});
   -- layer actions
-  ref = app.registerUi({["menu"] = "Show Next Layer", ["callback"] = "showNextLayer", ["accelerator"] = "l"});
-  ref = app.registerUi({["menu"] = "Show Previous Layer", ["callback"] = "showPreviousLayer", ["accelerator"] = "h"});
-  ref = app.registerUi({["menu"] = "Hide All Layers but 1", ["callback"] = "hideAllLayersBut1", ["accelerator"] = "<Shift>h"});
-  ref = app.registerUi({["menu"] = "Show Top Layer", ["callback"] = "showTopLayer", ["accelerator"] = "<Shift>l"});
-  ref = app.registerUi({["menu"] = "Add New Top Layer", ["callback"] = "addNewTopLayer", ["accelerator"] = "<Ctrl>l"});
-  ref = app.registerUi({["menu"] = "Delete Top Layer", ["callback"] = "deleteTopLayer", ["accelerator"] = "<Ctrl>h"});
+  ref = app.registerUi({["menu"] = "Show Next Layer (Current Page)", ["callback"] = "showNextLayerInCurrentPage", ["accelerator"] = "F2"});
+  ref = app.registerUi({["menu"] = "Show Previous Layer (Current Page)", ["callback"] = "showPreviousLayerInCurrentPage", ["accelerator"] = "F1"});
+  ref = app.registerUi({["menu"] = "Hide All Layers but 1 (All Page)", ["callback"] = "hideAllLayersBut1", ["accelerator"] = "<Shift>h"});
+  ref = app.registerUi({["menu"] = "Show Top Layer (All Page)", ["callback"] = "showTopLayer", ["accelerator"] = "<Shift>l"});
+  ref = app.registerUi({["menu"] = "Add New Top Layer (Current Page)", ["callback"] = "addNewTopLayerInCurrentPage", ["accelerator"] = "<Ctrl>l"});
+  ref = app.registerUi({["menu"] = "Delete Top Layer (Current Page)", ["callback"] = "deleteTopLayerInCurrentPage", ["accelerator"] = "<Ctrl>h"});
   print("Xourtcut plugin registered\n");
 end
 
@@ -199,58 +199,76 @@ function showTopLayer()
   app.setCurrentPage(page)
 end
 
-function addNewTopLayer()
-  local docStructure = app.getDocumentStructure()
-  local numPages = #docStructure["pages"]
-  local page = docStructure["currentPage"]
+-- function addNewTopLayer()
+--   local docStructure = app.getDocumentStructure()
+--   local numPages = #docStructure["pages"]
+--   local page = docStructure["currentPage"]
   
-  for i=1, numPages do
-    app.setCurrentPage(i)
-    app.layerAction("ACTION_GOTO_TOP_LAYER")
-    app.layerAction("ACTION_NEW_LAYER")  
-  end
+--   for i=1, numPages do
+--     app.setCurrentPage(i)
+--     app.layerAction("ACTION_GOTO_TOP_LAYER")
+--     app.layerAction("ACTION_NEW_LAYER")  
+--   end
   
-  app.setCurrentPage(page)
+--   app.setCurrentPage(page)
+-- end
+
+function addNewTopLayerInCurrentPage()
+  app.layerAction("ACTION_GOTO_TOP_LAYER")
+  app.layerAction("ACTION_NEW_LAYER")  
 end
 
-function deleteTopLayer()
-  local docStructure = app.getDocumentStructure()
-  local numPages = #docStructure["pages"]
-  local page = docStructure["currentPage"]
+-- function deleteTopLayer()
+--   local docStructure = app.getDocumentStructure()
+--   local numPages = #docStructure["pages"]
+--   local page = docStructure["currentPage"]
   
-  for i=1, numPages do
-    app.setCurrentPage(i)
-    app.layerAction("ACTION_GOTO_TOP_LAYER")
-    app.layerAction("ACTION_DELETE_LAYER")  
-  end
+--   for i=1, numPages do
+--     app.setCurrentPage(i)
+--     app.layerAction("ACTION_GOTO_TOP_LAYER")
+--     app.layerAction("ACTION_DELETE_LAYER")  
+--   end
   
-  app.setCurrentPage(page)
+--   app.setCurrentPage(page)
+-- end
+
+function deleteTopLayerInCurrentPage()
+  app.layerAction("ACTION_GOTO_TOP_LAYER")
+  app.layerAction("ACTION_DELETE_LAYER")  
 end
 
-function showNextLayer()
-  local docStructure = app.getDocumentStructure()
-  local page = docStructure["currentPage"]
-  local numPages = #docStructure["pages"]
+-- function showNextLayer()
+--   local docStructure = app.getDocumentStructure()
+--   local page = docStructure["currentPage"]
+--   local numPages = #docStructure["pages"]
 
-  for i=1, numPages do
-    app.setCurrentPage(i)
-    app.layerAction("ACTION_GOTO_NEXT_LAYER")
-  end
+--   for i=1, numPages do
+--     app.setCurrentPage(i)
+--     app.layerAction("ACTION_GOTO_NEXT_LAYER")
+--   end
   
-  app.setCurrentPage(page)
+--   app.setCurrentPage(page)
+-- end
+
+function showNextLayerInCurrentPage()
+  app.layerAction("ACTION_GOTO_NEXT_LAYER")
 end
 
-function showPreviousLayer()
-  local docStructure = app.getDocumentStructure()
-  local page = docStructure["currentPage"]
-  local numPages = #docStructure["pages"]
+-- function showPreviousLayer()
+--   local docStructure = app.getDocumentStructure()
+--   local page = docStructure["currentPage"]
+--   local numPages = #docStructure["pages"]
 
-  for i=1, numPages do
-    app.setCurrentPage(i)
-    app.layerAction("ACTION_GOTO_PREVIOUS_LAYER")
-  end
+--   for i=1, numPages do
+--     app.setCurrentPage(i)
+--     app.layerAction("ACTION_GOTO_PREVIOUS_LAYER")
+--   end
   
-  app.setCurrentPage(page)
+--   app.setCurrentPage(page)
+-- end
+
+function showPreviousLayerInCurrentPage()
+  app.layerAction("ACTION_GOTO_PREVIOUS_LAYER")
 end
 
 function toggleLineStyle()

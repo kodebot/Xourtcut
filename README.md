@@ -47,12 +47,12 @@ z - Toggle Line Style (switches between plain, dashed, and dotted lines)
 9 - Orange colour
 0 - Black colour
 
-l - Show Next Layer (open and close sidebar if the shortcut is not working)
-h - Show Previous Layer (open and close sidebar if the shortcut is not working)
-<Shift>h - Hide All Layers but 1
-<Shift>l - Show Top Layer
-<Ctrl>l - Add New Top Layer
-<Ctrl>h - Delete Top Layer
+F2 - Show Next Layer (Current Page) 
+F1 - Show Previous Layer (Current Page)
+<Shift>h - Hide All Layers but 1 (All Page)
+<Shift>l - Show Top Layer (All Page)
+<Ctrl>l - Add New Top Layer (Current Page)
+<Ctrl>h - Delete Top Layer (Current Page)
 
 ```
 
