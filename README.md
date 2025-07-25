@@ -34,6 +34,7 @@ n - Line tool
 w - Pen tool
 t - Text tool
 f - Toggle Fill tool (must have selected a shape tool and fill will be cleared on tool change)
+<Ctrl>f - Show Fill Opacity Dialog
 z - Toggle Line Style (switches between plain, dashed, and dotted lines)
 
 1 - White colour

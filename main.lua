@@ -23,6 +23,7 @@ function initUi()
   ref = app.registerUi({["menu"] = "Pen", ["callback"] = "clickPen", ["accelerator"] = "w"});
   ref = app.registerUi({["menu"] = "Text", ["callback"] = "clickText", ["accelerator"] = "t"});
   ref = app.registerUi({["menu"] = "Toggle Fill", ["callback"] = "toggleFill", ["accelerator"] = "f"});
+  ref = app.registerUi({["menu"] = "Show Fill Opacity Dialog", ["callback"] = "showFillOpacityDialog", ["accelerator"] = "<ctrl>f"});
   ref = app.registerUi({["menu"] = "Toggle Line Style", ["callback"] = "toggleLineStyle", ["accelerator"] = "z"});
   ref = app.registerUi({["menu"] = "Colour white", ["callback"] = "clickWhiteColour", ["accelerator"] = "1"});
   ref = app.registerUi({["menu"] = "Colour red", ["callback"] = "clickRedColour", ["accelerator"] = "2"});
@@ -113,6 +114,10 @@ function toggleFill()
   else
     app.uiAction({["action"] = "ACTION_TOOL_FILL", ["selection"] = true})
   end
+end
+
+function showFillOpacityDialog()
+    app.uiAction({["action"] = "ACTION_TOOL_PEN_FILL_OPACITY"})
 end
 
 -- shortcut 1
