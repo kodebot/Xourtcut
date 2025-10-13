@@ -56,6 +56,7 @@ F1 - Show Previous Layer (Current Page)
 <Ctrl>h - Delete Top Layer (Current Page)
 <Ctrl>k - Add New Layer Above Current (Current Page)
 <Ctrl>j - Add New Layer Below Current (Current Page)
+<Ctrl>b - Move Selection Layer Down and Add New Layer Below
 u - Move Selection Layer Up
 b - Move Selection Layer Down
 
