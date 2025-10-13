@@ -43,6 +43,7 @@ function initUi()
   ref = app.registerUi({["menu"] = "Add New Top Layer (Current Page)", ["callback"] = "addNewTopLayerInCurrentPage", ["accelerator"] = "<Ctrl>l"});
   ref = app.registerUi({["menu"] = "Delete Top Layer (Current Page)", ["callback"] = "deleteTopLayerInCurrentPage", ["accelerator"] = "<Ctrl>h"});
   ref = app.registerUi({["menu"] = "Move Selection Layer Up", ["callback"] = "moveSelectionLayerUp", ["accelerator"] = "u"});
+  ref = app.registerUi({["menu"] = "Move Selection Layer Down", ["callback"] = "moveSelectionLayerDown", ["accelerator"] = "b"});
   print("Xourtcut plugin registered\n");
 end
 
@@ -279,6 +280,10 @@ end
 
 function moveSelectionLayerUp()
   app.uiAction({["action"] = "ACTION_MOVE_SELECTION_LAYER_UP"})
+end
+
+function moveSelectionLayerDown()
+  app.uiAction({["action"] = "ACTION_MOVE_SELECTION_LAYER_DOWN"})
 end
 
 function toggleLineStyle()
