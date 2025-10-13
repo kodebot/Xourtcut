@@ -44,6 +44,8 @@ function initUi()
   ref = app.registerUi({["menu"] = "Delete Top Layer (Current Page)", ["callback"] = "deleteTopLayerInCurrentPage", ["accelerator"] = "<Ctrl>h"});
   ref = app.registerUi({["menu"] = "Move Selection Layer Up", ["callback"] = "moveSelectionLayerUp", ["accelerator"] = "u"});
   ref = app.registerUi({["menu"] = "Move Selection Layer Down", ["callback"] = "moveSelectionLayerDown", ["accelerator"] = "b"});
+  ref = app.registerUi({["menu"] = "Add New Layer Above Current", ["callback"] = "addNewLayerAboveCurrent", ["accelerator"] = "<Ctrl>k"});
+  ref = app.registerUi({["menu"] = "Add New Layer Below Current", ["callback"] = "addNewLayerBelowCurrent", ["accelerator"] = "<Ctrl>j"});
   print("Xourtcut plugin registered\n");
 end
 
@@ -280,10 +282,23 @@ end
 
 function moveSelectionLayerUp()
   app.uiAction({["action"] = "ACTION_MOVE_SELECTION_LAYER_UP"})
+  app.layerAction("ACTION_GOTO_PREVIOUS_LAYER")
 end
 
 function moveSelectionLayerDown()
   app.uiAction({["action"] = "ACTION_MOVE_SELECTION_LAYER_DOWN"})
+  app.layerAction("ACTION_GOTO_NEXT_LAYER")
+end
+
+function addNewLayerAboveCurrent()
+  app.layerAction("ACTION_NEW_LAYER")
+  app.layerAction("ACTION_GOTO_PREVIOUS_LAYER")
+end
+
+function addNewLayerBelowCurrent()
+  app.layerAction("ACTION_GOTO_PREVIOUS_LAYER")
+  app.layerAction("ACTION_NEW_LAYER")
+  app.layerAction("ACTION_GOTO_NEXT_LAYER")
 end
 
 function toggleLineStyle()
