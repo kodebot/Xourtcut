@@ -48,6 +48,9 @@ z - Toggle Line Style (switches between plain, dashed, and dotted lines)
 9 - Orange colour
 0 - Black colour
 
+- - Decrease Pen Size
+= - Increase Pen Size
+
 F2 - Show Next Layer (Current Page) 
 F1 - Show Previous Layer (Current Page)
 <Shift>h - Hide All Layers but 1 (All Page)
@@ -56,8 +59,7 @@ F1 - Show Previous Layer (Current Page)
 <Ctrl>h - Delete Top Layer (Current Page)
 <Ctrl>k - Add New Layer Above Current (Current Page)
 <Ctrl>j - Add New Layer Below Current (Current Page)
-<Ctrl>b - Move Selection Layer Down and Add New Layer Below
+<Ctrl>b - Move Selection Layer Down and Add New Layer Below (useful to draw everything on one layer and then move it down for a presentation effect)
 u - Move Selection Layer Up
 b - Move Selection Layer Down
-
 ```

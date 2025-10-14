@@ -35,6 +35,8 @@ function initUi()
   ref = app.registerUi({["menu"] = "Colour cyan", ["callback"] = "clickCyanColour", ["accelerator"] = "8"});
   ref = app.registerUi({["menu"] = "Colour orange", ["callback"] = "clickOrangeColour", ["accelerator"] = "9"});
   ref = app.registerUi({["menu"] = "Colour black", ["callback"] = "clickBlackColour", ["accelerator"] = "0"});
+  ref = app.registerUi({["menu"] = "Increase Pen Size", ["callback"] = "increasePenSize", ["accelerator"] = "equal"});
+  ref = app.registerUi({["menu"] = "Decrease Pen Size", ["callback"] = "decreasePenSize", ["accelerator"] = "minus"});
   -- layer actions
   ref = app.registerUi({["menu"] = "Show Next Layer (Current Page)", ["callback"] = "showNextLayerInCurrentPage", ["accelerator"] = "F2"});
   ref = app.registerUi({["menu"] = "Show Previous Layer (Current Page)", ["callback"] = "showPreviousLayerInCurrentPage", ["accelerator"] = "F1"});
@@ -181,6 +183,93 @@ function changeToolColour(colour)
 
   -- change text tool colour too, because (with the default template) the TEX tool also uses that colour
   app.changeToolColor({["color"] = colour, ["tool"] = "TEXT"})
+end
+
+-- pen size
+function increasePenSize()
+  print("increasePenSize called")
+  local activeTool = app.getToolInfo("active")
+  print("activeTool type: " .. activeTool["type"])
+  local toolType = activeTool["type"]
+  local toolInfo
+  local actionPrefix
+  if toolType == "pen" then
+    toolInfo = app.getToolInfo("pen")
+    actionPrefix = "ACTION_TOOL_PEN_SIZE_"
+    local sizeStr = type(toolInfo["size"]) == "table" and toolInfo["size"]["name"] or toolInfo["size"]
+    print("pen size: " .. sizeStr)
+  elseif toolType == "highlighter" then
+    toolInfo = app.getToolInfo("highlighter")
+    actionPrefix = "ACTION_TOOL_HIGHLIGHTER_SIZE_"
+    local sizeStr = type(toolInfo["size"]) == "table" and toolInfo["size"]["name"] or toolInfo["size"]
+    print("highlighter size: " .. sizeStr)
+  elseif toolType == "eraser" then
+    toolInfo = app.getToolInfo("eraser")
+    actionPrefix = "ACTION_TOOL_ERASER_SIZE_"
+    local sizeStr = type(toolInfo["size"]) == "table" and toolInfo["size"]["name"] or toolInfo["size"]
+    print("eraser size: " .. sizeStr)
+  else
+    print("unsupported tool type")
+    return
+  end
+  local currentSize = type(toolInfo["size"]) == "table" and toolInfo["size"]["name"] or toolInfo["size"]
+  local sizes = {"veryThin", "thin", "medium", "thick", "veryThick"}
+  local sizeToAction = {veryThin = "VERY_FINE", thin = "FINE", medium = "MEDIUM", thick = "THICK", veryThick = "VERY_THICK"}
+  for i, size in ipairs(sizes) do
+    print("checking " .. size .. " == " .. currentSize)
+    if size == currentSize then
+      if i < #sizes then
+        print("increasing to " .. sizes[i+1])
+        app.uiAction({["action"] = actionPrefix .. sizeToAction[sizes[i+1]]})
+      else
+        print("already max")
+      end
+      break
+    end
+  end
+end
+
+function decreasePenSize()
+  print("decreasePenSize called")
+  local activeTool = app.getToolInfo("active")
+  print("activeTool type: " .. activeTool["type"])
+  local toolType = activeTool["type"]
+  local toolInfo
+  local actionPrefix
+  if toolType == "pen" then
+    toolInfo = app.getToolInfo("pen")
+    actionPrefix = "ACTION_TOOL_PEN_SIZE_"
+    local sizeStr = type(toolInfo["size"]) == "table" and toolInfo["size"]["name"] or toolInfo["size"]
+    print("pen size: " .. sizeStr)
+  elseif toolType == "highlighter" then
+    toolInfo = app.getToolInfo("highlighter")
+    actionPrefix = "ACTION_TOOL_HIGHLIGHTER_SIZE_"
+    local sizeStr = type(toolInfo["size"]) == "table" and toolInfo["size"]["name"] or toolInfo["size"]
+    print("highlighter size: " .. sizeStr)
+  elseif toolType == "eraser" then
+    toolInfo = app.getToolInfo("eraser")
+    actionPrefix = "ACTION_TOOL_ERASER_SIZE_"
+    local sizeStr = type(toolInfo["size"]) == "table" and toolInfo["size"]["name"] or toolInfo["size"]
+    print("eraser size: " .. sizeStr)
+  else
+    print("unsupported tool type")
+    return
+  end
+  local currentSize = type(toolInfo["size"]) == "table" and toolInfo["size"]["name"] or toolInfo["size"]
+  local sizes = {"veryThin", "thin", "medium", "thick", "veryThick"}
+  local sizeToAction = {veryThin = "VERY_FINE", thin = "FINE", medium = "MEDIUM", thick = "THICK", veryThick = "VERY_THICK"}
+  for i, size in ipairs(sizes) do
+    print("checking " .. size .. " == " .. currentSize)
+    if size == currentSize then
+      if i > 1 then
+        print("decreasing to " .. sizes[i-1])
+        app.uiAction({["action"] = actionPrefix .. sizeToAction[sizes[i-1]]})
+      else
+        print("already min")
+      end
+      break
+    end
+  end
 end
 
 function hideAllLayersBut1()
