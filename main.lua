@@ -397,12 +397,12 @@ function moveSelectionLayerUp()
     app.uiAction({["action"] = "ACTION_MOVE_SELECTION_LAYER_UP"})
   end)
   
-  -- if success then
-  --   -- Only navigate if the move was successful
-  --   app.layerAction("ACTION_GOTO_PREVIOUS_LAYER")
-  -- else
-  --   print("Failed to move selection layer up")
-  -- end
+  if success then
+    app.setCurrentLayer(currentLayerIndex - 1, false)
+    app.setCurrentLayer(currentLayerIndex, false)
+  else
+    print("Failed to move selection layer up")
+  end
 end
 
 function moveSelectionLayerDown()
@@ -434,12 +434,13 @@ function moveSelectionLayerDown()
     app.uiAction({["action"] = "ACTION_MOVE_SELECTION_LAYER_DOWN"})
   end)
   
-  -- if success then
-  --   -- Only navigate if the move was successful
-  --   app.layerAction("ACTION_GOTO_NEXT_LAYER")
-  -- else
-  --   print("Failed to move selection layer down")
-  -- end
+  if success then
+    -- refresh layer view  
+    app.setCurrentLayer(currentLayerIndex + 1, false)
+    app.setCurrentLayer(currentLayerIndex, false)
+  else
+    print("Failed to move selection layer down")
+  end
 end
 
 function moveSelectionLayerDownAndAddNewLayerBelow()
