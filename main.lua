@@ -7,6 +7,7 @@ cyanColour   = 0x8BE9FD
 orangeColour = 0xFF9F58
 purpleColour = 0xbd93f9
 pinkColour   = 0xff79c6
+brownColour  = 0x8B4513
 blackColour  = 0x000000
 
 
@@ -32,7 +33,8 @@ function initUi()
   ref = app.registerUi({["menu"] = "Colour purple", ["callback"] = "clickPurpleColour", ["accelerator"] = "5"});
   ref = app.registerUi({["menu"] = "Colour yellow", ["callback"] = "clickYellowColour", ["accelerator"] = "6"});
   ref = app.registerUi({["menu"] = "Colour pink", ["callback"] = "clickPinkColour", ["accelerator"] = "7"});
-  ref = app.registerUi({["menu"] = "Colour cyan", ["callback"] = "clickCyanColour", ["accelerator"] = "8"});
+  -- ref = app.registerUi({["menu"] = "Colour cyan", ["callback"] = "clickCyanColour", ["accelerator"] = "8"});
+  ref = app.registerUi({["menu"] = "Colour brown", ["callback"] = "clickBrownColour", ["accelerator"] = "8"});
   ref = app.registerUi({["menu"] = "Colour orange", ["callback"] = "clickOrangeColour", ["accelerator"] = "9"});
   ref = app.registerUi({["menu"] = "Colour black", ["callback"] = "clickBlackColour", ["accelerator"] = "0"});
   ref = app.registerUi({["menu"] = "Increase Pen Size", ["callback"] = "increasePenSize", ["accelerator"] = "equal"});
@@ -127,52 +129,46 @@ function showFillOpacityDialog()
     app.uiAction({["action"] = "ACTION_TOOL_PEN_FILL_OPACITY"})
 end
 
--- shortcut 1
 function clickWhiteColour()
   changeToolColour(whiteColour)
 end
 
--- shortcut 2
 function clickRedColour()
   changeToolColour(redColour)
 end
 
--- shortcut 3
 function clickGreenColour()
   changeToolColour(greenColour)
 end
 
--- shortcut 4
 function clickBlueColour()
   changeToolColour(blueColour)
 end
 
--- shortcut 5
 function clickYellowColour()
   changeToolColour(yellowColour)
 end
 
--- shortcut 6
 function clickCyanColour()
   changeToolColour(cyanColour)
 end
 
--- shortcut 7
+function clickBrownColour()
+  changeToolColour(brownColour)
+end
+
 function clickOrangeColour()
   changeToolColour(orangeColour)
 end
 
--- shortcut 8
 function clickPurpleColour()
   changeToolColour(purpleColour)
 end
 
--- shortcut 9
 function clickPinkColour()
   changeToolColour(pinkColour)
 end
 
--- shortcut 0
 function clickBlackColour()
   changeToolColour(blackColour)
 end
