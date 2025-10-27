@@ -33,8 +33,8 @@ function initUi()
   ref = app.registerUi({["menu"] = "Colour purple", ["callback"] = "clickPurpleColour", ["accelerator"] = "5"});
   ref = app.registerUi({["menu"] = "Colour yellow", ["callback"] = "clickYellowColour", ["accelerator"] = "6"});
   ref = app.registerUi({["menu"] = "Colour pink", ["callback"] = "clickPinkColour", ["accelerator"] = "7"});
-  -- ref = app.registerUi({["menu"] = "Colour cyan", ["callback"] = "clickCyanColour", ["accelerator"] = "8"});
-  ref = app.registerUi({["menu"] = "Colour brown", ["callback"] = "clickBrownColour", ["accelerator"] = "8"});
+  ref = app.registerUi({["menu"] = "Colour cyan", ["callback"] = "clickCyanColour", ["accelerator"] = "8"});
+  -- ref = app.registerUi({["menu"] = "Colour brown", ["callback"] = "clickBrownColour", ["accelerator"] = "8"});
   ref = app.registerUi({["menu"] = "Colour orange", ["callback"] = "clickOrangeColour", ["accelerator"] = "9"});
   ref = app.registerUi({["menu"] = "Colour black", ["callback"] = "clickBlackColour", ["accelerator"] = "0"});
   ref = app.registerUi({["menu"] = "Increase Pen Size", ["callback"] = "increasePenSize", ["accelerator"] = "equal"});
@@ -311,6 +311,7 @@ end
 function addNewTopLayerInCurrentPage()
   app.layerAction("ACTION_GOTO_TOP_LAYER")
   app.layerAction("ACTION_NEW_LAYER")  
+  app.uiAction({["action"] = "ACTION_SAVE"})
 end
 
 -- function deleteTopLayer()
@@ -330,6 +331,7 @@ end
 function deleteTopLayerInCurrentPage()
   app.layerAction("ACTION_GOTO_TOP_LAYER")
   app.layerAction("ACTION_DELETE_LAYER")  
+  app.uiAction({["action"] = "ACTION_SAVE"})
 end
 
 -- function showNextLayer()
@@ -383,7 +385,9 @@ function moveSelectionLayerUp()
   end
   
   local currentLayerIndex = pages[currentPage]["currentLayer"]
-  if currentLayerIndex <= 1 then
+  local numLayers = #pages[currentPage]["layers"]
+  
+  if currentLayerIndex >= numLayers then
     print("Already at top layer, cannot move selection up")
     return
   end
@@ -396,6 +400,7 @@ function moveSelectionLayerUp()
   if success then
     app.setCurrentLayer(currentLayerIndex - 1, false)
     app.setCurrentLayer(currentLayerIndex, false)
+    app.uiAction({["action"] = "ACTION_SAVE"})
   else
     print("Failed to move selection layer up")
   end
@@ -418,9 +423,7 @@ function moveSelectionLayerDown()
   end
   
   local currentLayerIndex = pages[currentPage]["currentLayer"]
-  local numLayers = #pages[currentPage]["layers"]
-  
-  if currentLayerIndex >= numLayers then
+  if currentLayerIndex <= 1 then
     print("Already at bottom layer, cannot move selection down")
     return
   end
@@ -434,58 +437,96 @@ function moveSelectionLayerDown()
     -- refresh layer view  
     app.setCurrentLayer(currentLayerIndex + 1, false)
     app.setCurrentLayer(currentLayerIndex, false)
+    app.uiAction({["action"] = "ACTION_SAVE"})
   else
     print("Failed to move selection layer down")
   end
 end
 
 function moveSelectionLayerDownAndAddNewLayerBelow()
+  print("=== Starting moveSelectionLayerDownAndAddNewLayerBelow ===")
+
   -- Check if there's a selection first
+  print("Checking document structure...")
   local docStructure = app.getDocumentStructure()
   if not docStructure then
-    print("No document structure available")
+    print("ERROR: No document structure available")
     return
   end
-  
+  print("Document structure obtained successfully")
+
   -- Get current page and layer info
   local currentPage = docStructure["currentPage"]
   local pages = docStructure["pages"]
+  print("Current page: " .. tostring(currentPage))
+  print("Pages table exists: " .. tostring(pages ~= nil))
   if not pages or not pages[currentPage] then
-    print("Invalid page structure")
+    print("ERROR: Invalid page structure")
     return
   end
-  
+  print("Page structure valid")
+
   local currentLayerIndex = pages[currentPage]["currentLayer"]
   local numLayers = #pages[currentPage]["layers"]
-  
+  print("Current layer index: " .. tostring(currentLayerIndex))
+  print("Total layers: " .. tostring(numLayers))
+
+  if currentLayerIndex <= 0 then
+    print("WARNING: Already at bottom layer (index " .. tostring(currentLayerIndex) .. "), cannot move selection down")
+    return
+  end
+  print("Layer index valid for moving down")
+
+  -- Check if there's actually a selection
+  print("Checking for active selection...")
+  local activeTool = app.getToolInfo("active")
+  print("Active tool info: " .. (activeTool and tostring(activeTool.type) or "nil"))
+  -- Note: We can't directly check for selection, but tool type might give a hint
+
   -- Perform the move action with error handling
-  local moveSuccess = pcall(function()
+  print("Attempting to move selection layer down...")
+  local moveSuccess, moveError = pcall(function()
     app.uiAction({["action"] = "ACTION_MOVE_SELECTION_LAYER_DOWN"})
   end)
-  
+
   if not moveSuccess then
-    print("Failed to move selection layer down")
+    print("ERROR: Failed to move selection layer down. Error: " .. tostring(moveError))
     return
   end
-  
-  -- Navigate to next layer if move was successful
-  local navSuccess = pcall(function()
-    app.layerAction("ACTION_GOTO_NEXT_LAYER")
+  print("Successfully moved selection layer down")
+
+  -- Refresh layer view like in moveSelectionLayerDown
+  print("Refreshing layer view...")
+  pcall(function()
+    app.setCurrentLayer(currentLayerIndex - 1, false)
+    app.setCurrentLayer(currentLayerIndex, false)
   end)
-  
-  if not navSuccess then
-    print("Failed to navigate to next layer")
-    return
-  end
-  
-  -- Add new layer below current with error handling
-  local addSuccess = pcall(function()
+
+  -- Add new layer below current with error handling (assuming current layer is now the moved position)
+  print("Attempting to add new layer below current...")
+  local addSuccess, addError = pcall(function()
     addNewLayerBelowCurrent()
   end)
   
   if not addSuccess then
-    print("Failed to add new layer below current")
+    print("ERROR: Failed to add new layer below current. Error: " .. tostring(addError))
+  else
+    print("Successfully added new layer below current")
   end
+
+  -- Final document structure check
+  print("Getting final document structure...")
+  local finalDocStructure = app.getDocumentStructure()
+  if finalDocStructure then
+    local finalCurrentPage = finalDocStructure["currentPage"]
+    local finalPages = finalDocStructure["pages"]
+    local finalCurrentLayerIndex = finalPages and finalPages[finalCurrentPage] and finalPages[finalCurrentPage]["currentLayer"]
+    local finalNumLayers = finalPages and finalPages[finalCurrentPage] and #finalPages[finalCurrentPage]["layers"]
+    print("Final state - current layer index: " .. tostring(finalCurrentLayerIndex) .. ", total layers: " .. tostring(finalNumLayers))
+  end
+
+  app.uiAction({["action"] = "ACTION_SAVE"})
+  print("=== Finished moveSelectionLayerDownAndAddNewLayerBelow ===")
 end
 
 function addNewLayerAboveCurrent()
@@ -513,42 +554,117 @@ function addNewLayerAboveCurrent()
   if not success2 then
     print("Failed to go to previous layer")
   end
+  app.uiAction({["action"] = "ACTION_SAVE"})
 end
 
 function addNewLayerBelowCurrent()
+  print("=== Starting addNewLayerBelowCurrent ===")
+
   -- Get current document structure for validation
+  print("Getting document structure...")
   local docStructure = app.getDocumentStructure()
   if not docStructure then
-    print("No document structure available")
+    print("ERROR: No document structure available")
     return
   end
-  
+  print("Document structure obtained successfully")
+
+  -- Get current layer index
+  local currentPage = docStructure["currentPage"]
+  local pages = docStructure["pages"]
+  print("Current page: " .. tostring(currentPage))
+  print("Pages table exists: " .. tostring(pages ~= nil))
+  if not pages or not pages[currentPage] then
+    print("ERROR: Invalid page structure")
+    return
+  end
+  print("Page structure valid")
+
+  local currentLayerIndex = pages[currentPage]["currentLayer"]
+  local numLayers = #pages[currentPage]["layers"]
+  print("Current layer index: " .. tostring(currentLayerIndex))
+  print("Total layers: " .. tostring(numLayers))
+
+  -- Check if we can go to previous layer (not at bottom)
+  if currentLayerIndex <= 1 then
+    print("WARNING: Cannot add layer below the bottom layer (current layer index: " .. tostring(currentLayerIndex) .. ")")
+    return
+  end
+  print("Layer index valid for adding below")
+
   -- Perform actions with error handling
-  local success1 = pcall(function()
+  print("Attempting to go to previous layer...")
+  local success1, error1 = pcall(function()
     app.layerAction("ACTION_GOTO_PREVIOUS_LAYER")
   end)
-  
+
   if not success1 then
-    print("Failed to go to previous layer")
+    print("ERROR: Failed to go to previous layer. Error: " .. tostring(error1))
     return
   end
-  
-  local success2 = pcall(function()
+  print("Successfully went to previous layer")
+
+  -- Get layer index after goto previous
+  local afterGotoPrev = app.getDocumentStructure()
+  if afterGotoPrev then
+    local prevLayerIndex = afterGotoPrev["pages"] and afterGotoPrev["pages"][currentPage] and afterGotoPrev["pages"][currentPage]["currentLayer"]
+    print("Layer index after goto previous: " .. tostring(prevLayerIndex))
+  end
+
+  print("Attempting to create new layer...")
+  local success2, error2 = pcall(function()
     app.layerAction("ACTION_NEW_LAYER")
   end)
-  
+
   if not success2 then
-    print("Failed to create new layer")
+    print("ERROR: Failed to create new layer. Error: " .. tostring(error2))
     return
   end
-  
-  local success3 = pcall(function()
+  print("Successfully created new layer")
+
+  -- Get layer index after new layer
+  local afterNewLayer = app.getDocumentStructure()
+  if afterNewLayer then
+    local newLayerIndex = afterNewLayer["pages"] and afterNewLayer["pages"][currentPage] and afterNewLayer["pages"][currentPage]["currentLayer"]
+    local newNumLayers = afterNewLayer["pages"] and afterNewLayer["pages"][currentPage] and #afterNewLayer["pages"][currentPage]["layers"]
+    print("Layer index after new layer: " .. tostring(newLayerIndex) .. ", total layers: " .. tostring(newNumLayers))
+  end
+
+  print("Attempting first goto next layer...")
+  local success3, error3 = pcall(function()
     app.layerAction("ACTION_GOTO_NEXT_LAYER")
   end)
-  
+
   if not success3 then
-    print("Failed to go to next layer")
+    print("ERROR: Failed first goto next layer. Error: " .. tostring(error3))
+  else
+    print("Successfully completed first goto next layer")
   end
+
+  print("Attempting second goto next layer...")
+  local success4, error4 = pcall(function()
+    app.layerAction("ACTION_GOTO_NEXT_LAYER")
+  end)
+
+  if not success4 then
+    print("ERROR: Failed second goto next layer. Error: " .. tostring(error4))
+  else
+    print("Successfully completed second goto next layer")
+  end
+
+  -- Get final layer index
+  local finalDoc = app.getDocumentStructure()
+  if finalDoc then
+    local finalLayerIndex = finalDoc["pages"] and finalDoc["pages"][currentPage] and finalDoc["pages"][currentPage]["currentLayer"]
+    local finalNumLayers = finalDoc["pages"] and finalDoc["pages"][currentPage] and #finalDoc["pages"][currentPage]["layers"]
+    print("Final layer index: " .. tostring(finalLayerIndex) .. ", total layers: " .. tostring(finalNumLayers))
+  end
+
+  print("Saving document...")
+  app.uiAction({["action"] = "ACTION_SAVE"})
+  print("Document saved")
+
+  print("=== Finished addNewLayerBelowCurrent ===")
 end
 
 function toggleLineStyle()
