@@ -23,6 +23,7 @@ function initUi()
   ref = app.registerUi({["menu"] = "Line", ["callback"] = "clickLine", ["accelerator"] = "n"});
   ref = app.registerUi({["menu"] = "Pen", ["callback"] = "clickPen", ["accelerator"] = "w"});
   ref = app.registerUi({["menu"] = "Text", ["callback"] = "clickText", ["accelerator"] = "t"});
+  ref = app.registerUi({["menu"] = "LaTeX", ["callback"] = "clickLaTeX", ["accelerator"] = "m"});
   ref = app.registerUi({["menu"] = "Toggle Fill", ["callback"] = "toggleFill", ["accelerator"] = "f"});
   ref = app.registerUi({["menu"] = "Show Fill Opacity Dialog", ["callback"] = "showFillOpacityDialog", ["accelerator"] = "<ctrl>f"});
   ref = app.registerUi({["menu"] = "Toggle Line Style", ["callback"] = "toggleLineStyle", ["accelerator"] = "z"});
@@ -113,6 +114,10 @@ end
 
 function clickText()
   app.uiAction({["action"] = "ACTION_TOOL_TEXT"})
+end
+
+function clickLaTeX()
+  app.uiAction({["action"] = "ACTION_TEX"})
 end
 
 function toggleFill()
