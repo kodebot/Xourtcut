@@ -469,7 +469,7 @@ function moveSelectionLayerDown()
   end
   
   local currentLayerIndex = pages[currentPage]["currentLayer"]
-  if currentLayerIndex <= 1 then
+  if currentLayerIndex <= 0 then
     log("Already at bottom layer, cannot move selection down")
     return
   end
@@ -481,7 +481,7 @@ function moveSelectionLayerDown()
   
   if success then
     -- refresh layer view  
-    app.setCurrentLayer(currentLayerIndex + 1, false)
+    app.setCurrentLayer(currentLayerIndex - 1, false)
     app.setCurrentLayer(currentLayerIndex, false)
     app.uiAction({["action"] = "ACTION_SAVE"})
   else
@@ -633,7 +633,7 @@ function addNewLayerBelowCurrent()
   log("Total layers: " .. tostring(numLayers))
 
   -- Check if we can go to previous layer (not at bottom)
-  if currentLayerIndex <= 1 then
+  if currentLayerIndex <= 0 then
     log("WARNING: Cannot add layer below the bottom layer (current layer index: " .. tostring(currentLayerIndex) .. ")")
     return
   end
